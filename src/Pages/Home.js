@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, Dropdown } from "rsuite";
 import FetchCategory from '../Component/FetchCategory';
 import { useNavigate } from "react-router-dom";
-
+import { FlexboxGrid, Container, Header, Content } from "rsuite";
+import Cart from "../Component/cart/Cart";
+import { CartProvider } from "../Component/cart/Cart.Context";
 
 const Home = () => {
 
@@ -13,48 +14,41 @@ const Home = () => {
     navigate(categoryPath);
   };
 
-
-    function ShowCompData(){
-        return <FetchCategory/>
-    }
-    const CustomDropdown = ({ ...props }) => (
-      <Dropdown {...props} className="mainlist">
-        <Dropdown.Item className="list" onClick={ShowCompData}>
-          Headphones
-        </Dropdown.Item>
-        <Dropdown.Item className="list">Keyboard</Dropdown.Item>
-        <Dropdown.Item className="list">Mouse</Dropdown.Item>
-        <Dropdown.Item className="list">Computer</Dropdown.Item>
-        <Dropdown.Item className="list">Charger</Dropdown.Item>
-        <Dropdown.Item className="list">Settings</Dropdown.Item>
-        <Dropdown.Item className="list">About Us</Dropdown.Item>
-      </Dropdown>
-    );
-
-
     return (
       <>
-        <div className="main-body">
-          <div className="sidebar">
-            <CustomDropdown title="List" trigger="click" />
-            <Button className="btn" type="primary">
-              Home
-            </Button>
-            <Button className="btn" type="primary">
-              Category
-            </Button>
-            <Button className="btn" type="primary">
-              Checkout
-            </Button>
-          </div>
-        </div>
-        <div className="main-section">
-          <div className="showlist">
-            <FetchCategory
-              redirectToCategory={redirectToCategory}
-            ></FetchCategory>
-          </div>
-        </div>
+        <Container
+          style={{
+            width: "100vw",
+            height: "100vh",
+          }}
+        >
+          <Header>
+            <FlexboxGrid justify="end" align="middle">
+              <FlexboxGrid.Item>
+                <Cart></Cart>
+              </FlexboxGrid.Item>
+            </FlexboxGrid>
+          </Header>
+          <Content>
+            <FlexboxGrid
+              justify="center"
+              align="middle"
+              style={{
+                flexWrap: "wrap",
+                alignContent: "center",
+                width: "100%",
+                height: "100%",
+              }}
+              className="main-section"
+            >
+              <FlexboxGrid.Item className="showlist">
+                <FetchCategory
+                  redirectToCategory={redirectToCategory}
+                ></FetchCategory>
+              </FlexboxGrid.Item>
+            </FlexboxGrid>
+          </Content>
+        </Container>
       </>
     );
 }

@@ -95,3 +95,59 @@
   padding: 10px 10px;
   width: 100%;
 }
+.cart-container {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  width: 150px;
+  height: 110px;
+  margin-left: 800px;
+  border-radius: 30px;
+
+}
+/* Styles for the Cart component */
+
+
+.cart-items {
+  margin-top: 10px;
+}
+
+.cart-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.item-name {
+  font-size: 16px;
+  margin: 0;
+}
+
+.total-price {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 30px;
+}
+.circle-button {
+  width: 70px; /* Set the desired width */
+  height: 30px; /* Set the desired height */
+  border-radius: 20%; /* Make the button circular */
+  
+  padding: 10px;
+  margin: 10px;
+  justify-content: center;
+  
+}
+.alignhed{
+  display: flex;
+  justify-content: end;
+
+}
+.circle {
+  width: 100px;
+  height: 100px;
+  background: red;
+  border-radius: 50%
+}

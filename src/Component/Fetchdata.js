@@ -1,10 +1,20 @@
 import { Button, FlexboxGrid, Panel  } from 'rsuite';
 import productData  from '../Data/Products.json';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useCart } from './cart/Cart.Context';
 
 const FetchData = ({ category }) => {
 
   const [products] = useState(productData);
+ 
+  const { storedCartItems, storedTotalPrice, setCartItems, setTotalPrice } = useCart();
+
+  const addToCart = (product) => {
+  
+    setCartItems([...storedCartItems, product]);
+    setTotalPrice(storedTotalPrice + product?.price);
+
+  };
 
   const ProductList = () => {
      return products.map((product) => {
@@ -25,7 +35,9 @@ const FetchData = ({ category }) => {
                  <p>
                    {product.price}&nbsp;{product.currency}
                  </p>
+                 
                  <p style={{ color: product.inStock ? 'green' : 'red' }}>{product.inStock ? 'In Stock' : 'Out Of Stock'}</p>
+                 
                  <Button
                    style={{
                      alignItems: "center",
@@ -33,8 +45,10 @@ const FetchData = ({ category }) => {
                      color: "white",
                      backgroundColor: "black",
                    }}
+                   onClick={()=> product.inStock && addToCart(product)}
+                   disabled={!product.inStock}
                  >
-                   Add To Cart
+                   {product.inStock ? 'Add To Cart' : 'Out Of Stock'}
                  </Button>
                </Panel>
              </Panel>
@@ -45,13 +59,21 @@ const FetchData = ({ category }) => {
        return null;
      });
   }
+  useEffect(() => {
+    const cartItems = storedCartItems?.length > 0 ? storedCartItems : [];
+    const totalPrice = storedTotalPrice!== undefined && storedTotalPrice > 0 ? storedTotalPrice : 0; 
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    localStorage.setItem("totalPrice", totalPrice.toString());
+  }, [storedCartItems, storedTotalPrice]);
+
+
   return (
     <>
-    <FlexboxGrid>
-      <ProductList/>
-    </FlexboxGrid>
+      <FlexboxGrid>
+        <ProductList />
+      </FlexboxGrid>
     </>
-  )
+  );
 }
 
 export default FetchData;
