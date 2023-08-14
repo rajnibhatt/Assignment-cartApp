@@ -1,50 +1,83 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { Container, Header, Content, Sidebar } from "rsuite";
 import { useParams, useNavigate } from "react-router-dom";
 import FetchData from "../Component/Fetchdata";
 import categoryData from "../Data/Categorry.json";
-import { Checkbox, CheckboxGroup, FlexboxGrid, IconButton } from "rsuite";
+import productData from "../Data/Products.json"
+import { FlexboxGrid, IconButton } from "rsuite";
 import Cart from "../Component/cart/Cart";
-import { CartProvider } from "../Component/cart/Cart.Context";
 import { Icon } from '@rsuite/icons';
 import { FaHouseUser } from 'react-icons/fa6'; 
+import { FiltersList } from "../Component/FiltersList";
+import { ProductProvider } from "../Component/Product/product.context";
+import productsReducer from "../Component/Product/productsReducer";
 
 
 const Category = () => {
-    const [categories] = useState(categoryData);
 
-    const { categoryId } = useParams();
+  const [categories] = useState(categoryData);
+  
+  const { categoryId } = useParams();
+    
+  const productsToShow = useMemo(() => {
+    return productData.filter(p => p.categoryId === categoryId);
+  },[categoryId]);
+  
+  const [filteredProducts, dispatch] = useReducer(productsReducer, productsToShow);
+  const [selectedFilters, setSelectedFilters] = useState([]);
 
-    const navigate = useNavigate();
-
-    const [selectedCategory, setSelectedCategory] = useState();
-
-    const HomeIcon = () => (
-      <Icon as={FaHouseUser} />
-    )
-
-    const redirectToHome = () => {
-      navigate('/');
+  const handleFilterChange = (checked, filterName) => {
+    if (checked) {
+      setSelectedFilters((prevFilters) => [...prevFilters, filterName]);
+    } else {
+      setSelectedFilters((prevFilters) =>
+        prevFilters.filter((filter) => filter !== filterName)
+      );
     }
+  };
 
-    useEffect(() => {
-      const filteredCategory = categories.find(category => categoryId === category.id);
-      setSelectedCategory(filteredCategory);
-    }, [categoryId, categories]);
-   
-    return (
-      <>
-        <Container style={{ padding: "0 10px" }}>
-          <Header className="alignhed">
-            <FlexboxGrid justify="start">
-              <IconButton icon={<HomeIcon/>} onClick={redirectToHome}>Home</IconButton>
-            </FlexboxGrid>
-            <FlexboxGrid justify="end">
-              <Cart></Cart>
-            </FlexboxGrid>
-          </Header>
-        </Container>
-        <Container style={{ marginTop: "100px" }}>
+  useEffect(() => {
+    dispatch({
+      type: "setFilters",
+      filters: selectedFilters,
+      initialProducts: productsToShow,
+    });
+  }, [selectedFilters, productsToShow]);
+
+
+  const navigate = useNavigate();
+
+  const [selectedCategory, setSelectedCategory] = useState();
+
+  const HomeIcon = () => (
+    <Icon as={FaHouseUser} />
+  )
+
+  const redirectToHome = () => {
+    navigate('/');
+  }
+
+  useEffect(() => {
+    const filteredCategory = categories.find(category => categoryId === category.id);
+    setSelectedCategory(filteredCategory);
+  }, [categoryId, categories]);
+  
+  return (
+    <>
+      <Container style={{ padding: "0 10px" }}>
+        <Header className="alignhed">
+          <FlexboxGrid justify="start">
+            <IconButton icon={<HomeIcon />} onClick={redirectToHome}>
+              Home
+            </IconButton>
+          </FlexboxGrid>
+          <FlexboxGrid justify="end">
+            <Cart></Cart>
+          </FlexboxGrid>
+        </Header>
+      </Container>
+      <Container style={{ marginTop: "100px" }}>
+        <ProductProvider>
           <Sidebar
             style={{
               padding: "0 10px",
@@ -54,11 +87,9 @@ const Category = () => {
           >
             <h2>Filters</h2>
             <Content>
-              <CheckboxGroup name="checkboxList">
-                <Checkbox value="A">Keyboard</Checkbox>
-                <Checkbox value="B">Headphones</Checkbox>
-                <Checkbox value="C">Laptop</Checkbox>
-              </CheckboxGroup>
+              <FiltersList
+                handleFilterChange={handleFilterChange}
+              />
             </Content>
           </Sidebar>
           <Content
@@ -67,11 +98,12 @@ const Category = () => {
             }}
           >
             <h2>{selectedCategory?.name}</h2>
-            <FetchData category={selectedCategory}></FetchData>
+            <FetchData products={filteredProducts}></FetchData>
           </Content>
-        </Container>
-      </>
-    );
+        </ProductProvider>
+      </Container>
+    </>
+  );
 };
 
 export default Category;

@@ -2,18 +2,26 @@ import React from "react";
 import { IconButton, ButtonGroup } from "rsuite";
 import { useCart } from "./Cart.Context";
 import { Icon } from '@rsuite/icons';
-import { FaCartShopping } from 'react-icons/fa6'; 
+import { FaCartShopping } from 'react-icons/fa6';
+import { useNavigate } from "react-router-dom";
 
 
 export const Cart = () => {
 
+    const navigate = useNavigate();
+
+    const redirectToCheckout = () => {
+        navigate('/checkout');
+    }
+
     const { storedCartItems, storedTotalPrice } = useCart();
 
     const CartItemCount = () => {
+        const itemCount = storedCartItems?.reduce((count,item) => count += item.qty, 0);
         const itemCountString = storedCartItems
-          ? storedCartItems?.length > 99
+          ? itemCount > 99
             ? "99+"
-            : "" + storedCartItems?.length
+            : "" + itemCount
           : "0";
         return(
             <i style={{fontSize: '16px', width: 20, height: 20}}>{ itemCountString }</i>
@@ -34,7 +42,7 @@ export const Cart = () => {
     );
 
     return (
-      <ButtonGroup>
+      <ButtonGroup onClick={redirectToCheckout}>
         <IconButton icon={<CartItemCount />} circle size="lg" />
         <IconButton icon={<CartIcon />} placement="right">
           <CartTotalPrice />

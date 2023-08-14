@@ -151,3 +151,18 @@
   background: red;
   border-radius: 50%
 }
+.maincarttable{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: center;
+  height: 500px;
+  
+}
+.carttable{
+height: auto;
+width: 64%;
+border: solid rgb(207, 203, 203);  
+background-color: papayawhip;
+
+}

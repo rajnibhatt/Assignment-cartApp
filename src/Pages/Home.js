@@ -3,7 +3,6 @@ import FetchCategory from '../Component/FetchCategory';
 import { useNavigate } from "react-router-dom";
 import { FlexboxGrid, Container, Header, Content } from "rsuite";
 import Cart from "../Component/cart/Cart";
-import { CartProvider } from "../Component/cart/Cart.Context";
 
 const Home = () => {
 

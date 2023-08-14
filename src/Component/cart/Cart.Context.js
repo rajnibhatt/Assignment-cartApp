@@ -4,15 +4,16 @@ const CartContext = createContext();
 
 export const CartProvider = ({children}) => {
 
-    const [storedCartItems, setCartItems] = useState();
-    const [storedTotalPrice, setTotalPrice] = useState();
+    const [storedCartItems, setCartItems] = useState(
+      JSON.parse(localStorage.getItem("cartItems")) || []
+    );
+    const [storedTotalPrice, setTotalPrice] = useState(
+      parseFloat(localStorage.getItem("totalPrice")) || 0
+    );
 
     useEffect(() => {
-      const cartItems =
-        JSON.parse(localStorage.getItem("cartItems")) || [];
-      const cartTotalPrice =
-        parseFloat(localStorage.getItem("totalPrice")) || 0;
-      console.log("cartItems changed: ", cartItems);
+      const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+      const cartTotalPrice = parseFloat(localStorage.getItem("totalPrice")) || 0;
       setCartItems(cartItems);
       setTotalPrice(cartTotalPrice);
     }, []);

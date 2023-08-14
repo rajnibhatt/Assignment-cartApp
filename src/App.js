@@ -6,9 +6,10 @@ import Checkout from './Pages/Checkout';
 import Home from './Pages/Home';
 import { CartProvider } from './Component/cart/Cart.Context';
 
+
 const  App = () => {
   return (
-    <>
+   
     <CartProvider>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -16,7 +17,7 @@ const  App = () => {
         <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </CartProvider>
-    </>
+  
   );
 }
 
